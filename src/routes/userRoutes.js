@@ -7,7 +7,7 @@ const userRoutes = express.Router();
 userRoutes.post("/signup", UserController.createUser);
 userRoutes.post("/login", UserController.login);
 userRoutes.get(
-  "/user/id",
+  "/user/:id",
   isLoggedin,
   verifyRole("admin"),
   UserController.getSingleUser
@@ -19,10 +19,16 @@ userRoutes.get(
   UserController.getAllUsers
 );
 userRoutes.put(
-  "/update/id",
+  "/update/:id",
   isLoggedin,
   verifyRole("admin"),
   UserController.updateUserRole
+);
+userRoutes.delete(
+  "/delete/:id",
+  isLoggedin,
+  verifyRole("admin"),
+  UserController.deleteUser
 );
 userRoutes.put("/reset", UserController.resetPassword);
 

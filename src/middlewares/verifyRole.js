@@ -11,8 +11,8 @@ export const verifyRole = (allowedRole) => (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded.payload;
-    if (req.user.role === allowedRole) {
+    req.user = decoded.payload.user;
+    if (req.user?.role === allowedRole) {
       next();
     } else {
       res.status(401).json({ message: "unauthorised" });
