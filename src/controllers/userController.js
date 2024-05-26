@@ -1,10 +1,17 @@
 import { User } from "../database/models";
 import bcrypt from "bcrypt";
 import generateToken from "../helpers/tokenGen";
+import userSchema from "../validations/userSchema";
 class UserController {
   //signup
   static async createUser(req, res) {
     try {
+      const { error } = userSchema.validate(req.body);
+      if (error)
+        return res
+          .status(400)
+          .json({ validationError: error.details[0].message });
+
       const duplicatedEmail = await User.findOne({
         where: { email: req.body.email },
       });
@@ -154,6 +161,31 @@ class UserController {
       res.status(200).json({
         status: "success",
         message: "Password reset successfully",
+      });
+    } catch (error) {
+      res.status(500).json({
+        status: "fail",
+        error: error.message,
+      });
+    }
+  }
+  // Delete user
+  static async deleteUser(req, res) {
+    try {
+      const userId = req.params.id;
+      const user = await User.findByPk(userId);
+      if (!user) {
+        return res.status(404).json({
+          status: "fail",
+          message: "User not found",
+        });
+      }
+
+      await user.destroy();
+
+      res.status(200).json({
+        status: "success",
+        message: "User deleted successfully",
       });
     } catch (error) {
       res.status(500).json({

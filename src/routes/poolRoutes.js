@@ -29,6 +29,12 @@ poolRoutes.put(
   verifyRole("admin"),
   PoolController.updatePool
 );
+poolRoutes.delete(
+  "/delete/:id",
+  isLoggedin,
+  verifyRole("admin"),
+  PoolController.deletePool
+);
 poolRoutes.put(
   "/assign/:poolId",
   isLoggedin,

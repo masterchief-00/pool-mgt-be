@@ -1,9 +1,15 @@
 import { Pool, User } from "../database/models";
-
+import poolSchema from "../validations/poolSchema";
 class PoolController {
   //create pool
   static async createPool(req, res) {
     try {
+      const { error } = poolSchema.validate(req.body);
+      if (error)
+        return res
+          .status(400)
+          .json({ validationError: error.details[0].message });
+
       const existingPool = await Pool.findOne({
         where: { name: req.body.name },
       });
@@ -129,6 +135,31 @@ class PoolController {
         message: "User assigned as pool operator",
         pool: pool,
         user: user,
+      });
+    } catch (error) {
+      res.status(500).json({
+        status: "fail",
+        error: error.message,
+      });
+    }
+  }
+  // Delete pool
+  static async deletePool(req, res) {
+    try {
+      const poolId = req.params.id;
+      const pool = await Pool.findByPk(poolId);
+      if (!pool) {
+        return res.status(404).json({
+          status: "fail",
+          message: "Pool not found",
+        });
+      }
+
+      await pool.destroy();
+
+      res.status(200).json({
+        status: "success",
+        message: "Pool deleted successfully",
       });
     } catch (error) {
       res.status(500).json({

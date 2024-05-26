@@ -24,6 +24,12 @@ userRoutes.put(
   verifyRole("admin"),
   UserController.updateUserRole
 );
+userRoutes.delete(
+  "/delete/:id",
+  isLoggedin,
+  verifyRole("admin"),
+  UserController.deleteUser
+);
 userRoutes.put("/reset", UserController.resetPassword);
 
 export default userRoutes;
