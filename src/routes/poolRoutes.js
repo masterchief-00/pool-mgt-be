@@ -18,13 +18,24 @@ poolRoutes.get(
   PoolController.getSinglePool
 );
 poolRoutes.get(
-  "/pools",
+  "/locations",
   isLoggedin,
-  verifyRole("admin"),
+  verifyRole("overseer"),
+  PoolController.groupAllPoolsByLocation
+);
+poolRoutes.get(
+  "/operator/:userId",
+  isLoggedin,
+  PoolController.getPoolsByOperator
+);
+poolRoutes.get(
+  "/:location",
+  isLoggedin,
+  verifyRole("admin,overseer", true),
   PoolController.getAllPools
 );
 poolRoutes.put(
-  "/update/:id",
+  "/update/:poolId",
   isLoggedin,
   verifyRole("admin"),
   PoolController.updatePool

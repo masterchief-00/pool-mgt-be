@@ -22,7 +22,7 @@ class UserController {
       }
 
       const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(req.body.pwd, salt);
+      const hashedPassword = await bcrypt.hash("12345678", salt);
 
       const newUser = await User.create({
         fname: req.body.fname,
@@ -32,6 +32,7 @@ class UserController {
         location: req.body.location,
         pwd: hashedPassword,
         gender: req.body.gender,
+        role: "operator",
       });
 
       return res.status(201).json({
@@ -98,6 +99,26 @@ class UserController {
   static async getAllUsers(req, res) {
     try {
       const users = await User.findAll();
+      res.status(200).json({
+        status: "success",
+        allUsers: users,
+      });
+    } catch (error) {
+      res.status(404).json({
+        status: "fail",
+        error: error.message,
+      });
+    }
+  }
+
+  // get operators by location
+  static async getAllOperators(req, res) {
+    try {
+      const { location } = req.params;
+      const locationStr = location.replace("&", " ");
+      const users = await User.findAll({
+        where: { location: locationStr, role: "operator" },
+      });
       res.status(200).json({
         status: "success",
         allUsers: users,
