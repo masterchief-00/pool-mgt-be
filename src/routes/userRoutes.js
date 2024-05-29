@@ -18,6 +18,12 @@ userRoutes.get(
   verifyRole("admin"),
   UserController.getAllUsers
 );
+userRoutes.get(
+  "/operators/:location",
+  isLoggedin,
+  verifyRole("admin"),
+  UserController.getAllOperators
+);
 userRoutes.put(
   "/update/:id",
   isLoggedin,

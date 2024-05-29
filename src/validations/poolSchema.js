@@ -20,7 +20,10 @@ const poolSchema = Joi.object({
     "any.required": "The width field is required",
     "string.empty": "The width field cannot be empty",
   }),
-
+  assigned_to: Joi.required().label("assigned_to").messages({
+    "any.required": "The width field is required",
+    "string.empty": "The width field cannot be empty",
+  }),
   location: Joi.string().required().messages({
     "string.empty": "The location field cannot be empty",
     "string.empty": "The location field cannot be empty",

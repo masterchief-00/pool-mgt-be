@@ -1,5 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
+const { v4: uuidv4 } = require("uuid");
+
 module.exports = (sequelize, DataTypes) => {
   class Pool extends Model {
     static associate(models) {
@@ -10,7 +12,6 @@ module.exports = (sequelize, DataTypes) => {
     {
       id: {
         type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
       name: DataTypes.STRING,
@@ -25,5 +26,9 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "Pool",
     }
   );
+
+  Pool.beforeCreate((pool) => {
+    pool.id = uuidv4();
+  });
   return Pool;
 };

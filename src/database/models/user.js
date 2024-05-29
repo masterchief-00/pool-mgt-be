@@ -39,5 +39,9 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "User",
     }
   );
+
+  User.beforeCreate((user) => {
+    user.id = uuidv4();
+  });
   return User;
 };
